@@ -1,24 +1,27 @@
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
+
 const getItem =  util.promisify(fs.readdir)
-const findJSFile = async (list, PATH) =>{
-    console.log('in')
+const getStat = util.promisify(fs.stat)
+
+const findJSFile = async (PATH) =>{
+    list = Array.from(await getItem(PATH))
     list.forEach(async item => {
-        if(item.name.isDirectory()){
-            await findJSFile(Array.from(getItem(item, {withFileTypes:true})), path.join(PATH, item.name))
+        const where = path.join(PATH, item)
+        const stat = await getStat(where)
+        if(stat.isDirectory()){
+            await findJSFile(where)
         }
-        else if(path.extname(path.join(PATH, item.name)) == ".js"){
-            console.log(path.join(PATH, item.name))
+        else if(path.extname(path.join(PATH, item)) == ".js"){
+            console.log(path.join(PATH, item))
         }
     })
     return;
 }
 (async()=>{ 
     try {
-        const itemList = Array.from(getItem("./test"))
-        console.log(itemList)
-        await findJSFile(itemList, "./test")
+        await findJSFile("./test")
     } catch (error) {
         console.error(error)}
     }
