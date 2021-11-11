@@ -39,7 +39,7 @@ create table 'blocks' (
     primary key('id'),
     foreign key('blockedBy') references 'users' ('id') on delete cascade,
     foreign key('blocked') references 'users' ('id') on delete cascade,
-)
+);
 
 create table 'follows' (
     'id' int not null auto_increment,
@@ -47,5 +47,5 @@ create table 'follows' (
     'followee' int not null,
     primary key('id'),
     foreign key('follower') references 'users' ('id') on delete cascade,
-    foreign key('followee') references 'users' ('id') on delete cascade
-)
+    foreign key('followee') references 'users' ('id') on delete cascade,
+);
